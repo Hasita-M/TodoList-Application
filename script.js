@@ -1,42 +1,69 @@
 const toDoInput = document.getElementById('todoInput');
 const listContainer = document.getElementById('list-container');
 
-function addTask(){
-    if(toDoInput.value.trim() === '') {
-        alert("Please enter a task.");
-    } else {
-        let li = document.createElement('li'); //creating an HTML element
-        li.innerHTML = toDoInput.value;
-        listContainer.appendChild(li);
-        let span = document.createElement('span'); 
-        span.innerHTML = "\u00d7"; // Assigning the 'X' icon
-        li.appendChild(span); 
-    }
-    toDoInput.value = ''; // Clear the input field after adding the task
-    saveTasks();
+// Add task
+async function addTask() {
+  if (toDoInput.value.trim() === '') {
+    alert("Please enter a task.");
+    return;
+  }
+
+  await fetch('http://localhost:5001/tasks', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: toDoInput.value, completed: false })
+  });
+
+  toDoInput.value = '';
+  loadTasks();
 }
 
-listContainer.addEventListener('click', function(e) {
-    if(e.target.tagName === 'LI') {
-        e.target.classList.toggle('completed'); // Toggle the 'checked' class on click
-        saveTasks();
-    } else if(e.target.tagName === 'SPAN') {
-        e.target.parentElement.remove(); // Remove the task when 'X' is clicked
-        saveTasks();
-    }
-}, false);
+// Load tasks from backend
+async function loadTasks() {
+  const res = await fetch('http://localhost:5001/tasks');
+  const tasks = await res.json();
+  listContainer.innerHTML = '';
 
-toDoInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        addTask();
-    }
+  tasks.forEach(task => {
+    let li = document.createElement('li');
+    li.textContent = task.text;
+    if (task.completed) li.classList.add('completed');
+    li.dataset.id = task.id;
+
+    let span = document.createElement('span');
+    span.innerHTML = "\u00d7";
+    li.appendChild(span);
+
+    listContainer.appendChild(li);
+  });
+}
+
+// Click listener for complete/delete
+listContainer.addEventListener('click', async function(e) {
+  const li = e.target.closest('li');
+  const id = li?.dataset.id;
+
+  if (!id) return;
+
+  if (e.target.tagName === 'LI') {
+    // Toggle completion
+    await fetch(`http://localhost:5001/tasks/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ completed: !li.classList.contains('completed') })
+    });
+    loadTasks();
+  } else if (e.target.tagName === 'SPAN') {
+    // Delete task
+    await fetch(`http://localhost:5001/tasks/${id}`, { method: 'DELETE' });
+    loadTasks();
+  }
 });
 
-function saveTasks(){
-    localStorage.setItem('tasks', listContainer.innerHTML);
-}
+// Enter key adds task
+toDoInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') addTask();
+});
 
-function showTasks() {
-    listContainer.innerHTML = localStorage.getItem('tasks') || ''; // Load tasks from localStorage
-}
-showTasks();
+// Initial load
+loadTasks();
