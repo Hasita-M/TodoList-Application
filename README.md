@@ -1,1 +1,1 @@
-To do List Application using Local Storage
+To do List Application
