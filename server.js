@@ -27,7 +27,22 @@ const sequelize = new Sequelize(
 const Task = sequelize.define('Task', {
   text: { type: DataTypes.STRING, allowNull: false },
   completed: { type: DataTypes.BOOLEAN, defaultValue: false },
-  dueDate: { type: DataTypes.DATE, allowNull: true }
+  dueDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    get() {
+      const rawValue = this.getDataValue('dueDate');
+      if (!rawValue) return null;
+    
+      // Format JS Date object as 'YYYY-MM-DD'
+      //Getting UTC components to avoid timezone issues
+      const year = rawValue.getUTCFullYear();
+      const month = String(rawValue.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based so adding 1 to show correct month
+      const day = String(rawValue.getUTCDate()).padStart(2, '0');
+    
+      return `${year}-${month}-${day}`;
+    }
+  }
 });
 
 sequelize.sync(); // Sync models with database
