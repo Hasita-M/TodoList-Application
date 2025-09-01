@@ -1,39 +1,40 @@
-*{
+* {
     margin: 0;
     padding: 0;
     font-family: 'Dancing Script', cursive;
     box-sizing: border-box;
-
-}
-
-.container{
+  }
+  
+  .container {
     width: 100%;
     min-height: 100vh;
     background: linear-gradient(135deg, #fffde1, #ffe8a3, #ffd97d, #ffcb4c);
     padding: 10px;
-}
-
-.Todo-application{
+  }
+  
+  .Todo-application {
     width: 100%;
-    max-width: 615px; /* Width of Acheive Today blue box */
-    margin: 50px auto 20px;
-    background-color: 	#e6f7ff;
+    max-width: 800px;
+    /*margin: 50px auto 20px;*/
+    margin: 50px 0px 20px 150px;
+    background-color: #e6f7ff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 40px 30px 70px;
     border-radius: 10px;
-}
-
-.Todo-application h2{
+  }
+  
+  .Todo-application h2 {
     color: #002765;
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-}
-.Todo-application h2 img{
+  }
+  .Todo-application h2 img {
     width: 40px;
     margin-left: 10px;
-}
-.todo-input{
+  }
+  
+  .todo-input {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -41,33 +42,37 @@
     border-radius: 30px;
     padding-left: 20px;
     margin-bottom: 25px;
-}
-input{
-    flex:1;
+  }
+  
+  input {
+    flex: 1;
     border: none;
     outline: none;
     background: transparent;
     padding: 10px;
-}
-button{
+  }
+  
+  button {
     border: none;
     outline: none;
     padding: 16px 50px;
     background: #ffcb4c;
     color: #000;
-    font-size: 16-px;
+    font-size: 16px;
     cursor: pointer;
     border-radius: 40px;
-}
-ul li{
+  }
+  
+  ul li {
     list-style: none;
     font-size: 17px;
-    padding: 12px 130px 12px 50px;
+    padding: 12px 170px 12px 50px;
     user-select: none;
     cursor: pointer;
     position: relative;
-}
-ul li::before{
+  }
+  
+  ul li::before {
     content: '';
     position: absolute;
     height: 28px;
@@ -78,18 +83,52 @@ ul li::before{
     background-position: center;
     top: 12px;
     left: 8px;
-}
-ul li.completed{
-    color:#555;
+  }
+  
+  ul li.completed {
+    color: #555;
     text-decoration: line-through;
-}
-ul li.completed::before{
-    background-image: url(images/completed.png)
-}
-
-ul li span.edit-icon {
+  }
+  
+  ul li.completed::before {
+    background-image: url(images/completed.png);
+  }
+  
+  /* Due date display */
+  ul li span.due-date-display {
     position: absolute;
-    right: 45px;    /* Place pencil 45px from the right */
+    right: 80px;
+    top: 16px;
+    color: #000000;
+    font-size: 15px;
+    cursor: pointer;
+    
+  }
+  ul li span.due-date-display.placeholder {
+    color: #000000;
+    font-size: 11px;       
+  }
+  
+  
+  ul li span.due-date-display:hover {
+    color: #333;
+    text-decoration: underline;
+  }
+  
+  /* Due date input */
+  .due-date-input {
+    position: absolute;
+    right: 100px;
+    top: 10px;
+    z-index: 10;
+    font-size: 15px;
+    width: 120px;
+  }
+  
+  /* Edit (pencil) icon */
+  ul li span.edit-icon {
+    position: absolute;
+    right: 35px;
     top: 5px;
     width: 40px;
     height: 40px;
@@ -97,11 +136,13 @@ ul li span.edit-icon {
     font-size: 22px;
     line-height: 40px;
     text-align: center;
-}
-    
-ul li span.delete-icon {
+    cursor: pointer;
+  }
+  
+  /* Delete icon */
+  ul li span.delete-icon {
     position: absolute;
-    right: 0;       /* Delete icon stays at right edge */
+    right: 0;
     top: 5px;
     width: 40px;
     height: 40px;
@@ -109,12 +150,13 @@ ul li span.delete-icon {
     font-size: 22px;
     line-height: 40px;
     text-align: center;
-}
-    
-ul li span.edit-icon:hover,
-ul li span.delete-icon:hover {
+    cursor: pointer;
+  }
+  
+  ul li span.edit-icon:hover,
+  ul li span.delete-icon:hover {
     background: #edeef0;
     color: #000;
     border-radius: 50%;
-}    
-
+  }
+  
